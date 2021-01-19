@@ -4,6 +4,7 @@ import * as glob from 'glob';
 import * as rimraf from 'rimraf';
 import * as ignore from 'ignore';
 import { Logger } from './logger';
+import { countReset } from 'console';
 
 export class FuncIgnore {
     public static doesFuncignoreExist(working_dir: string): boolean {
@@ -16,8 +17,8 @@ export class FuncIgnore {
         const rules: string[] = readFileSync(funcignorePath).toString().split('\n').filter(l => l.trim() !== '');
 
         // checking if gitignore is in rules
-        console.log(`if gitignore exist in allfiles: ${rules.indexOf('.gitignore') > -1}`);
-        console.log(`index of gitignore in allFIles: ${rules.indexOf('.gitignore')}`);
+        console.log(`if gitignore exist in rules: ${rules.indexOf('.gitignore') > -1}`);
+        console.log(`index of gitignore in rules: ${rules.indexOf('.gitignore')}`);
 
         try {
             // @ts-ignore
@@ -39,9 +40,24 @@ export class FuncIgnore {
         allFiles.forEach(name => {
             const filename = name.replace(`${sanitizedWorkingDir}/`, '');
             if (ignoreParser.ignores(filename)) {
+
+                // debug logs
+                if (filename.indexOf(".gitignore") > -1) {
+                    console.log(`in removeFiles: filename: ${filename}`);
+                }
+
                 try {
+                    console.log(`start of try`);
+                    if (name.indexOf(".gitignore") > -1) {
+                        console.log(`in try: name: ${name}`);
+                    }
                     rimraf.sync(name, { maxBusyTries: 1 });
+                    console.log(`end of try`);
                 } catch (error) {
+                    if (filename.indexOf(".gitignore") > -1) {
+                        console.log(`in catch: filename: ${filename}; error: ${error}`);
+                    }
+
                     Logger.Warn(`Failed to remove ${filename} (file defined in .gitignore)`);
                 }
             }
