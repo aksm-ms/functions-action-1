@@ -37,6 +37,10 @@ export class FuncIgnore {
         const sanitizedWorkingDir: string = FuncIgnore.sanitizeWorkingDir(working_dir);
         const allFiles: string[] = glob.sync(`${sanitizedWorkingDir}/**/*`);
 
+        // checking if gitignore is in allFiles
+        console.log(`if gitignore exist in allFiles: ${allFiles.indexOf('.gitignore') > -1}`);
+        console.log(`index of gitignore in allFiles: ${allFiles.indexOf('.gitignore')}`);
+
         allFiles.forEach(name => {
             const filename = name.replace(`${sanitizedWorkingDir}/`, '');
             if (ignoreParser.ignores(filename)) {
