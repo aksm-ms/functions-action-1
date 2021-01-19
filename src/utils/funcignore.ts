@@ -15,6 +15,10 @@ export class FuncIgnore {
         const funcignorePath: string = resolve(working_dir, '.funcignore');
         const rules: string[] = readFileSync(funcignorePath).toString().split('\n').filter(l => l.trim() !== '');
 
+        // checking if gitignore is in rules
+        console.log(`if gitignore exist in allfiles: ${rules.indexOf('.gitignore') > -1}`);
+        console.log(`index of gitignore in allFIles: ${rules.indexOf('.gitignore')}`);
+
         try {
             // @ts-ignore
             return ignore().add(rules);
@@ -31,9 +35,6 @@ export class FuncIgnore {
 
         const sanitizedWorkingDir: string = FuncIgnore.sanitizeWorkingDir(working_dir);
         const allFiles: string[] = glob.sync(`${sanitizedWorkingDir}/**/*`);
-        // checking if gitignore is in allFiles
-        console.log(`if gitignore exist in allfiles: ${allFiles.indexOf('.gitignore') > -1}`);
-        console.log(`index of gitignore in allFIles: ${allFiles.indexOf('.gitignore')}`);
 
         allFiles.forEach(name => {
             const filename = name.replace(`${sanitizedWorkingDir}/`, '');
